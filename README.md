@@ -1,37 +1,22 @@
-# Final Exam Review
-
-**Turn your course materials into a personalized, continuous exam preparation workflow.**
-
-一个面向 AI Agent 的期末考试复习 Skill，将课件、作业和历年试题转化为可检索可复用的本地课程知识库，提供针对性出题、智能批改、错题图解和持续学习追踪。
-
-![Agent Skills](https://img.shields.io/badge/Agent-Skills-blue)
-![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
-![RAG](https://img.shields.io/badge/RAG-Semantic%20Search-orange)
-![Storage](https://img.shields.io/badge/Storage-Local-brightgreen)
-
-[快速开始](#快速开始) · [核心功能](#核心功能) · [工作原理](#工作原理) · [使用示例](#使用示例) · [技术文档](#技术文档)
-
-:::
-:::writing{variant="document" id="93126"}
 ## 快速开始
 
 ### 1. 安装 Skill
 
-推荐使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装：
+#### 方式 A：Skills CLI（推荐）
+
+使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装，支持 Codex、Claude Code、Cursor、OpenCode 、Deepseek Harness等多种 AI Agent。
 
 ```bash
 npx skills add havxiaobing/final-exam-review
 ```
 
-按照提示选择需要安装到的 AI Agent。
-
-如果希望在多个项目中使用，可以进行全局安装：
+按照提示选择目标 Agent。若希望在所有项目中使用该 Skill，可进行全局安装：
 
 ```bash
 npx skills add havxiaobing/final-exam-review -g
 ```
 
-也可以指定目标平台，例如：
+也可以直接指定目标平台：
 
 ```bash
 # Codex
@@ -47,53 +32,73 @@ npx skills add havxiaobing/final-exam-review -g -a cursor
 npx skills add havxiaobing/final-exam-review -g -a opencode
 ```
 
-使用 Skills CLI 需要提前安装符合其版本要求的 Node.js。
+此方式需要预先安装符合 Skills CLI 版本要求的 Node.js。
 
-### 2. 安装运行依赖
+#### 方式 B：PowerShell 手动安装（Windows）
 
-建议使用 Python 3.13，并通过独立虚拟环境安装以下依赖：
+如果没有安装 Node.js，可以在安装 Git 后，通过 PowerShell 直接克隆仓库。
 
-```bash
-python -m venv .venv
+**Codex**
+
+```powershell
+$skillRoot = Join-Path $env:USERPROFILE '.agents/skills'
+New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
+git clone https://github.com/havxiaobing/final-exam-review.git (Join-Path $skillRoot 'final-exam-review')
 ```
 
-激活虚拟环境：
+**Claude Code**
+
+```powershell
+$skillRoot = Join-Path $env:USERPROFILE '.claude/skills'
+New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
+git clone https://github.com/havxiaobing/final-exam-review.git (Join-Path $skillRoot 'final-exam-review')
+```
+
+对于其他 Agent，可参考对应平台的官方文档，将完整的 Skill 目录放入指定位置。
+
+### 2. 配置运行环境
+
+建议使用 Python 3.13，并将虚拟环境存放在 Skill 源码仓库之外。
 
 **Windows PowerShell**
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+$runtime = Join-Path $env:LOCALAPPDATA 'final-exam-review/runtime'
+
+py -3.13 -m venv $runtime
+
+$python = Join-Path $runtime 'Scripts/python.exe'
+
+& $python -m pip install fastembed==0.9.1 pymupdf python-pptx
 ```
 
 **macOS / Linux**
 
 ```bash
-source .venv/bin/activate
+python3.13 -m venv "$HOME/.local/share/final-exam-review/runtime"
+
+"$HOME/.local/share/final-exam-review/runtime/bin/python" -m pip install fastembed==0.9.1 pymupdf python-pptx
 ```
 
-安装依赖：
+上述命令需要预先安装 Python 3.13。也可以让 Agent 协助完成运行环境配置，并告知 Agent 虚拟环境中的 Python 路径。
 
-```bash
-python -m pip install fastembed==0.9.1 pymupdf python-pptx
-```
-
-首次准备向量模型时需要联网下载模型文件，此后可复用本地模型缓存。
-
-也可以让 Agent 协助完成 Python 环境配置、依赖安装和模型准备。
+首次使用时需要下载约 90 MB 的向量模型，后续索引与检索可复用本地模型缓存。
 
 ### 3. 开始复习
 
-启动支持 Agent Skills 的 AI Agent，调用 `final-exam-review`，或者直接使用自然语言描述你的复习需求。
+启动支持 Agent Skills 的 AI Agent，调用 `final-exam-review`，并提供课程资料位置及备考目标。
 
 例如：
 
-> 帮我生成一份流体力学的期末模拟卷，课程资料位于 D:\学习资料\海洋流体动力学。
+> 使用 final-exam-review 帮我生成一份流体力学的期末模拟卷，课程资料位于 D:\学习资料\海洋流体动力学。
 
-Skill 会根据当前课程的初始化状态，引导你确认课程目录、考试范围及备考要求，并按照 [SKILL.md](SKILL.md) 中定义的工作流程处理课程资料。
+Skill 将引导用户确认课程目录、考试范围和出题要求，并按照 [SKILL.md](SKILL.md) 中定义的工作流程建立知识库和生成练习。
 
-![Final Exam Review - Quick Start](assets/demo-dsh.png)
+<p align="center">
+  <img src="assets/demo-dsh.png" width="850" alt="Final Exam Review interactive course setup">
+</p>
 
-*实际运行示例：Agent 根据用户提供的课程资料，引导用户完成课程知识库与学习记录的存储配置。*
+*实际运行示例：根据用户提供的课程资料，引导用户配置本地知识库与学习记录的存储位置。*
 
 也可以一次性提供完整的复习要求：
 
@@ -109,13 +114,27 @@ Skill 会根据当前课程的初始化状态，引导你确认课程目录、�
 等我完成后批改，并记录薄弱知识点。
 ```
 
-后续复习只需继续使用同一个课程目录，即可复用已建立的知识库和历史学习记录。
+后续复习时，只需指定同一门课程及其课程目录，即可复用已经建立的知识库和历史学习记录。
+
+### 更新 Skill
+
+通过 Skills CLI 安装的用户可运行：
+
+```bash
+npx skills update
+```
+
+通过 Git 手动安装的用户，可在 Skill 目录中运行：
+
+```bash
+git pull
+```
+
+建议将课程知识库、学习记录、虚拟环境和模型缓存保存在源码仓库之外，避免更新 Skill 时影响已有数据。
 
 ### 平台兼容性
 
-本项目采用 [Agent Skills](https://agentskills.io/) 开放规范组织技能指令、执行脚本和参考文档，不依赖单一 AI Agent 平台。
-
-目标支持的平台包括：
+本项目采用 [Agent Skills](https://agentskills.io/) 开放规范组织技能指令、执行脚本和参考文档。
 
 | 平台 | 兼容性 |
 | --- | --- |
@@ -123,16 +142,7 @@ Skill 会根据当前课程的初始化状态，引导你确认课程目录、�
 | Claude Code | 待验证 |
 | Cursor | 待验证 |
 | OpenCode | 待验证 |
-| 其他支持 Agent Skills 的平台 | 取决于平台能力 |
-
-完整工作流程要求 Agent 具备本地文件读写、终端命令执行和 Python 脚本运行能力。交互式询问和错题图解的呈现形式可能因平台而异。
-
-### 手动安装
-
-如果不使用 Skills CLI，也可以直接克隆仓库：
-
-```bash
-git clone https://github.com/havxiaobing/final-exam-review.git
+| 其他 Agent Skills 平台 | 取决于平台能力 |nal-exam-review.git
 ```
 
 将完整的 `final-exam-review` 目录放入目标 Agent 的 Skills 目录，并保留其中的 `SKILL.md`、`scripts/` 和 `references/` 等文件。
