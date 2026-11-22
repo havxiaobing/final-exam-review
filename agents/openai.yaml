@@ -1,0 +1,4 @@
+interface:
+  display_name: "final-exam-review"
+  short_description: "按考试范围和老师例题出卷，批改后持续追踪错题和薄弱知识点"
+  default_prompt: "使用 $final-exam-review，按我提供的考试范围和老师例题出一套期末诊断卷，并在我指定的本地目录跟踪练习。"

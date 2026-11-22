@@ -1,0 +1,38 @@
+# Personal course material, generated records and indices
+materials/
+*.pdf
+*.ppt
+*.pptx
+*.sqlite
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+.course-index-*
+learning-records*
+course-index*
+
+# Model caches and local Python environments
+model-cache/
+models/
+.venv/
+venv/
+.env
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.coverage
+
+# Personal exports and local workspaces
+course-data/
+courses/
+course-workspaces/
+imports/
+exports/
+outputs/
+*.zip
+*.bak
+*.log
+.DS_Store
+Thumbs.db
