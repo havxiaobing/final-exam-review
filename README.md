@@ -1,6 +1,8 @@
 # final-exam-review
 
-Final Exam Review is a Codex skill for university exam preparation. It builds a searchable local library from lecture slides, PDFs, homework, and past exams, then creates practice exams based on those materials. After grading, it uses the student's work to identify gaps, explains difficult concepts with diagrams alongside the relevant questions, and tracks progress across study sessions.
+A skill that creates practice exams from course materials, grades answers, explains mistakes with diagrams, and tracks study progress locally.
+
+In Codex, it indexes lecture slides, PDFs, homework, and past exams in a searchable local library. Feedback uses the student's work to identify gaps, with diagrams placed alongside the questions they explain.
 
 这个技能帮助用户按课程考试范围准备练习。它将用户指定的 PDF、PPTX、Markdown 或文本转换成 Markdown，在用户选择的目录建立本地语义索引，优先按作业、样卷和课件内容或例题变式出卷，并支持批改、图解错题、复练和持续记录学习情况。使用时向支持技能的助手提供课程资料位置、课程目录和备考目标，具体工作流见 [SKILL.md](SKILL.md)。
 
