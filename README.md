@@ -110,6 +110,8 @@ Skill 将引导用户确认课程目录、考试范围和出题要求，并按�
 
 <p align="center">
   <img src="assets/demo-dsh.png" width="850" alt="Final Exam Review interactive course setup">
+  <img src="assets/demo2-dsh.png" width="850" alt="Final Exam Review interactive course setup">
+  <img src="assets/demo3-dsh.png" width="850" alt="Final Exam Review interactive course setup">
 </p>
 
 *实际运行示例：根据用户提供的课程资料，引导用户配置本地知识库与学习记录的存储位置。*
