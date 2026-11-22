@@ -1,106 +1,145 @@
+:::writing{variant="document" id="93125"}
 # Final Exam Review
 
 **Turn your course materials into a personalized, continuous exam preparation workflow.**
 
-一个面向 Codex 的期末考试复习 Skill，将课件、作业和历年试题转化为可检索的课程知识库，提供针对性出题、自动批改、错题图解和持续学习追踪。
+一个面向 AI Agent 的期末考试复习 Skill，将课件、作业和历年试题转化为可检索的本地课程知识库，提供针对性出题、智能批改、错题图解和持续学习追踪。
 
-![Platform](https://img.shields.io/badge/Platform-Codex-412991)
-![Python](https://img.shields.io/badge/Python-3.13-3776AB)
-![Agent Skills](https://img.shields.io/badge/Agent-Skills-orange)
+![Agent Skills](https://img.shields.io/badge/Agent-Skills-blue)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![RAG](https://img.shields.io/badge/RAG-Semantic%20Search-orange)
 ![Storage](https://img.shields.io/badge/Storage-Local-brightgreen)
 
 [快速开始](#快速开始) · [核心功能](#核心功能) · [工作原理](#工作原理) · [使用示例](#使用示例) · [技术文档](#技术文档)
 
----
-
-## 为什么使用 Final Exam Review？
-
-直接将大量课程 PPT 和 PDF 提供给 AI，往往会消耗大量上下文，而生成的练习题也不一定符合老师的授课重点和考试风格。随着对话增长，先前的错题、复习进度和考试要求也可能逐渐丢失。
-
-Final Exam Review 通过本地知识库和持久化学习记录解决这些问题：
-
-- 不必在每次复习时重新读取全部课程资料。
-- 优先依据老师布置的作业、样卷和课件例题出题。
-- 根据实际作答定位知识缺口，而不只是提供标准答案。
-- 在错题旁提供对应的情景图、原理图或知识点图。
-- 跨会话保留学习记录，让后续练习建立在已有复习成果之上。
-
-**从一次性的 AI 答疑，转变为持续迭代的课程复习系统。**
-
-## 核心功能
-
-| 功能 | 说明 |
-| --- | --- |
-| Course Library | 将课程资料转换为 Markdown，建立本地可检索的知识库 |
-| Semantic Search | 按知识点检索相关课程内容，减少重复读取资料带来的上下文开销 |
-| Exam Generation | 根据考试范围、题型、分值和课程资料生成模拟试卷 |
-| Adaptive Practice | 根据历史错题和薄弱知识点生成针对性练习 |
-| Answer Grading | 批改作答、统计得分，并分析具体失分原因 |
-| Visual Explanation | 结合原题和学生作答，通过图解辅助理解错误 |
-| Progress Tracking | 持久化保存试卷、作答、错题和知识点掌握情况 |
-| Source Grounding | 优先使用课程内部资料，并记录题目与知识点来源 |
-
+:::
+:::writing{variant="document" id="93126"}
 ## 快速开始
 
 ### 1. 安装 Skill
 
-在 Windows PowerShell 中运行：
+推荐使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装：
 
-```powershell
-$skillRoot = Join-Path $env:USERPROFILE '.agents/skills'
-
-New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
-
-git clone https://github.com/YOUR_USERNAME/final-exam-review.git (Join-Path $skillRoot 'final-exam-review')
+```bash
+npx skills add havxiaobing/final-exam-review
 ```
 
-将 `YOUR_USERNAME` 替换为仓库所有者的 GitHub 用户名。
+按照提示选择需要安装到的 AI Agent。
 
-如果只希望在某个项目中使用该 Skill，也可以将仓库放入项目的 `.agents/skills/` 目录。
+如果希望在多个项目中使用，可以进行全局安装：
 
-更多安装说明参见 [Codex Skills 官方文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)。
-
-### 2. 安装依赖
-
-建议使用 Python 3.13，并为 Skill 创建独立的虚拟环境。
-
-```powershell
-python -m venv "$env:LOCALAPPDATA\Codex\final-exam-review\runtime"
-
-$python = Join-Path $env:LOCALAPPDATA 'Codex/final-exam-review/runtime/Scripts/python.exe'
-
-& $python -m pip install fastembed==0.9.1 pymupdf python-pptx
+```bash
+npx skills add havxiaobing/final-exam-review -g
 ```
 
-macOS 和 Linux 用户可使用 `venv` 或 `uv` 创建环境并安装相同的依赖。
+也可以指定目标平台，例如：
 
-首次准备向量模型需要联网下载模型文件，之后可复用本地模型缓存。
+```bash
+# Codex
+npx skills add havxiaobing/final-exam-review -g -a codex
+
+# Claude Code
+npx skills add havxiaobing/final-exam-review -g -a claude-code
+
+# Cursor
+npx skills add havxiaobing/final-exam-review -g -a cursor
+
+# OpenCode
+npx skills add havxiaobing/final-exam-review -g -a opencode
+```
+
+使用 Skills CLI 需要提前安装符合其版本要求的 Node.js。
+
+### 2. 安装运行依赖
+
+建议使用 Python 3.13，并通过独立虚拟环境安装以下依赖：
+
+```bash
+python -m venv .venv
+```
+
+激活虚拟环境：
+
+**Windows PowerShell**
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+**macOS / Linux**
+
+```bash
+source .venv/bin/activate
+```
+
+安装依赖：
+
+```bash
+python -m pip install fastembed==0.9.1 pymupdf python-pptx
+```
+
+首次准备向量模型时需要联网下载模型文件，此后可复用本地模型缓存。
+
+也可以让 Agent 协助完成 Python 环境配置、依赖安装和模型准备。
 
 ### 3. 开始复习
 
-在 Codex 中调用：
+启动支持 Agent Skills 的 AI Agent，调用 `final-exam-review`，或者直接使用自然语言描述你的复习需求。
+
+例如：
+
+> 帮我生成一份流体力学的期末模拟卷，课程资料位于 D:\学习资料\海洋流体动力学。
+
+Skill 会根据当前课程的初始化状态，引导你确认课程目录、考试范围及备考要求，并按照 [SKILL.md](SKILL.md) 中定义的工作流程处理课程资料。
+
+![Final Exam Review - Quick Start](assets/demo-quickstart.png)
+
+*实际运行示例：Agent 根据用户提供的课程资料，引导用户完成课程知识库与学习记录的存储配置。*
+
+也可以一次性提供完整的复习要求：
 
 ```text
-$final-exam-review
-```
-
-然后提供课程资料和备考要求，例如：
-
-```text
-我正在准备流体力学期末考试。
-
+课程：流体力学
 课程资料：D:/Study/FluidMechanics/materials
 课程目录：D:/Study/FluidMechanics/review
-
 考试范围：第 1–6 章
 考试题型：选择题、填空题、简答题、计算题
 
-请建立课程知识库，参考老师的作业和 PPT 例题，
+请建立课程知识库，参考老师的作业和课件例题，
 生成一份诊断性模拟试卷。
 等我完成后批改，并记录薄弱知识点。
 ```
 
-Skill 将按照 [SKILL.md](SKILL.md) 中定义的工作流程进行资料处理、知识库建立和复习任务。
+后续复习只需继续使用同一个课程目录，即可复用已建立的知识库和历史学习记录。
+
+### 平台兼容性
+
+本项目采用 [Agent Skills](https://agentskills.io/) 开放规范组织技能指令、执行脚本和参考文档，不依赖单一 AI Agent 平台。
+
+目标支持的平台包括：
+
+| 平台 | 兼容性 |
+| --- | --- |
+| Codex | 已有实际运行示例 |
+| Claude Code | 待验证 |
+| Cursor | 待验证 |
+| OpenCode | 待验证 |
+| 其他支持 Agent Skills 的平台 | 取决于平台能力 |
+
+完整工作流程要求 Agent 具备本地文件读写、终端命令执行和 Python 脚本运行能力。交互式询问和错题图解的呈现形式可能因平台而异。
+
+### 手动安装
+
+如果不使用 Skills CLI，也可以直接克隆仓库：
+
+```bash
+git clone https://github.com/havxiaobing/final-exam-review.git
+```
+
+将完整的 `final-exam-review` 目录放入目标 Agent 的 Skills 目录，并保留其中的 `SKILL.md`、`scripts/` 和 `references/` 等文件。
+
+具体技能目录及调用方式请参阅对应 Agent 的官方文档。
+:::
 
 ## 工作原理
 
