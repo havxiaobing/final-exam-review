@@ -1,9 +1,8 @@
-:::writing{variant="document" id="93125"}
 # Final Exam Review
 
 **Turn your course materials into a personalized, continuous exam preparation workflow.**
 
-一个面向 AI Agent 的期末考试复习 Skill，将课件、作业和历年试题转化为可检索的本地课程知识库，提供针对性出题、智能批改、错题图解和持续学习追踪。
+一个面向 AI Agent 的期末考试复习 Skill，将课件、作业和历年试题转化为可检索可复用的本地课程知识库，提供针对性出题、智能批改、错题图解和持续学习追踪。
 
 ![Agent Skills](https://img.shields.io/badge/Agent-Skills-blue)
 ![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
@@ -92,7 +91,7 @@ python -m pip install fastembed==0.9.1 pymupdf python-pptx
 
 Skill 会根据当前课程的初始化状态，引导你确认课程目录、考试范围及备考要求，并按照 [SKILL.md](SKILL.md) 中定义的工作流程处理课程资料。
 
-![Final Exam Review - Quick Start](assets/demo-quickstart.png)
+![Final Exam Review - Quick Start](assets/demo-dsh.png)
 
 *实际运行示例：Agent 根据用户提供的课程资料，引导用户完成课程知识库与学习记录的存储配置。*
 
@@ -148,7 +147,7 @@ Final Exam Review 将整个复习过程划分为两个相互关联的部分：�
 ```mermaid
 flowchart TD
     A["课程资料<br/>PPT · PDF · 作业 · 历年试题"] --> B["资料转换与知识库索引"]
-    B --> C["本地向量知识库"]
+    B --> C["本地向量知识库RAG"]
     C --> D["相关知识点检索"]
     E["考试范围与题型要求"] --> F["生成针对性试卷"]
     D --> F
@@ -333,9 +332,7 @@ Final Exam Review 采用本地存储和本地向量检索设计。
 - 在符合外部题源使用条件时，Skill 可能联网检索公开资料。
 - AI 助手处理检索结果的方式取决于所使用的平台及相关数据配置。
 
-本地知识库并不意味着整个 AI 推理过程完全离线。
-
-建议不要将真实课程资料、个人作答、学习记录、虚拟环境和模型缓存提交到公开仓库。
+本地知识库并不意味着整个 AI 推理过程完全离线。若资料私密请注意保护隐私。
 
 ## 已知限制
 
