@@ -1,3 +1,17 @@
+# Final Exam Review
+
+**Turn your course materials into a personalized, continuous exam preparation workflow.**
+
+一个面向 AI Agent 的期末考试复习 Skill，将课件、作业和历年试题转化为可检索的本地课程知识库，提供针对性出题、智能批改、错题图解和持续学习追踪。
+
+![Agent Skills](https://img.shields.io/badge/Agent-Skills-blue)
+![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![RAG](https://img.shields.io/badge/RAG-Semantic%20Search-orange)
+![Storage](https://img.shields.io/badge/Storage-Local-brightgreen)
+
+[快速开始](#快速开始) · [核心功能](#核心功能) · [工作原理](#工作原理) · [使用示例](#使用示例) · [技术文档](#技术文档)
+
+
 ## 快速开始
 
 ### 1. 安装 Skill
