@@ -15,8 +15,34 @@
 ## 快速开始
 
 ### 1. 安装 Skill
+### 方式 A：让 AI Agent 自动安装（推荐）
 
-#### 方式 A：Skills CLI（推荐）
+**Let your Agent handle the installation.**
+
+将以下提示词复制并发送给 Codex、Claude Code、DeepSeek Harness、ZCode 或其他支持 Agent Skills 的 AI Agent：
+
+```text
+请帮我安装并配置以下 Skill：
+
+https://github.com/havxiaobing/final-exam-review
+
+1. 阅读仓库 README.md，识别当前 Agent 平台及操作系统。
+2. 根据当前平台选择正确的技能安装目录，将完整 Skill 安装到用户级目录。
+3. 检查 Python 环境，优先复用已有兼容环境；如有需要，创建独立虚拟环境并安装依赖。
+4. 检查是否已有可复用的向量模型缓存。
+5. 验证 Skill 文件、Python 依赖及技能发现状态。
+6. 告诉我安装结果、实际安装路径及调用方式。
+
+请直接执行安装，而不是仅提供操作命令。
+不要覆盖已有课程资料、知识库或学习记录。
+未经我确认，不要初始化课程目录或建立课程知识库。
+```
+
+Agent 将根据当前运行环境选择合适的安装方式。如果涉及终端执行、网络访问或本地文件写入，请按照平台提示确认权限。
+
+安装完成后，即可调用 `final-exam-review` 开始复习。
+:::
+#### 方式 B：Skills CLI（推荐）
 
 使用 [Skills CLI](https://github.com/vercel-labs/skills) 安装，支持 Codex、Claude Code、Cursor、OpenCode 、Deepseek Harness等多种 AI Agent。
 
@@ -48,27 +74,47 @@ npx skills add havxiaobing/final-exam-review -g -a opencode
 
 此方式需要预先安装符合 Skills CLI 版本要求的 Node.js。
 
-#### 方式 B：PowerShell 手动安装（Windows）
+### 方式 C：手动安装（Windows PowerShell）
 
-如果没有安装 Node.js，可以在安装 Git 后，通过 PowerShell 直接克隆仓库。
+如果没有安装 Node.js，或者当前 Agent 未被 Skills CLI 支持，可以通过 Git 手动安装。
 
-**Codex**
+根据使用的 Agent 选择对应的技能目录：
 
 ```powershell
+# Codex / DeepSeek Harness（共享技能目录）
 $skillRoot = Join-Path $env:USERPROFILE '.agents/skills'
-New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
-git clone https://github.com/havxiaobing/final-exam-review.git (Join-Path $skillRoot 'final-exam-review')
+
+# Claude Code
+# $skillRoot = Join-Path $env:USERPROFILE '.claude/skills'
+
+# DeepSeek Harness（独立技能目录）
+# $skillRoot = Join-Path $env:USERPROFILE '.dsh/skills'
+
+# ZCode
+# $skillRoot = Join-Path $env:USERPROFILE '.zcode/skills'
 ```
 
-**Claude Code**
+取消目标平台对应命令的注释，并确保只选择一个安装目录，然后执行：
 
 ```powershell
-$skillRoot = Join-Path $env:USERPROFILE '.claude/skills'
 New-Item -ItemType Directory -Path $skillRoot -Force | Out-Null
+
 git clone https://github.com/havxiaobing/final-exam-review.git (Join-Path $skillRoot 'final-exam-review')
 ```
 
-对于其他 Agent，可参考对应平台的官方文档，将完整的 Skill 目录放入指定位置。
+安装完成后，确认目标目录中存在 `final-exam-review/SKILL.md`，并保留完整的 `scripts/` 和 `references/` 目录。
+
+如未发现 Skill，可刷新技能列表或重新开启 Agent 会话。
+
+相关平台文档：
+
+- [Codex Skills](https://developers.openai.com/codex/skills)
+- [Claude Code Skills](https://code.claude.com/docs/en/skills)
+- [DeepSeek Harness Skills](https://github.com/deepseek-ai/deepseek-harness/tree/master/packages/skill/skill-filesystem)
+- [ZCode Skills](https://zcode.z.ai/cn/docs/skill)
+
+已经通过共享目录安装的用户，无需在支持该目录的 Agent 中重复安装。
+:::
 
 ### 2. 配置运行环境
 
